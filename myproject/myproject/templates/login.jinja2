@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login Form</title>
+</head>
+<body>
+    <h2>Login</h2>
+    <form id="loginForm" method="post">
+        Username: <input type="text" name="username"><br>
+        Password: <input type="password" name="password"><br>
+        <input type="submit" value="Login">
+    </form>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent default form submission
+            
+            // Get CSRF token from the hidden input field
+            var csrfToken = "{{ csrf_token }}"
+            
+            // Get form data
+            var formData = new FormData(this);
+            
+            // Create and send POST request with CSRF token in headers
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', '/login', true);
+            //xhr.setRequestHeader('X-CSRF-Token', csrfToken); // Set CSRF token in request header
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    // Handle response
+                    if (xhr.status === 200) {
+                        // Login successful, redirect or show message
+                        alert(xhr.responseText);
+                    } else {
+                        // Login failed, handle error
+                        alert('Login failed');
+                    }
+                }
+            };
+            xhr.send(formData); // Send form data
+        });
+    </script>
+</body>
+</html>
